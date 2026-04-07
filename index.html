@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enter</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* Snow canvas sits on top of everything */
+    #snow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* Password wall */
+    #gate {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      background: radial-gradient(ellipse at center, #0d0010 0%, #000 70%);
+    }
+
+    .glow-ring {
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      background: transparent;
+      box-shadow:
+        0 0 60px 20px rgba(138, 43, 226, 0.25),
+        0 0 120px 60px rgba(100, 0, 180, 0.12);
+      pointer-events: none;
+    }
+
+    .lock-icon {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      filter: drop-shadow(0 0 12px rgba(160, 60, 255, 0.9));
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(160, 60, 255, 0.8)); }
+      50%       { filter: drop-shadow(0 0 22px rgba(200, 100, 255, 1)); }
+    }
+
+    h1 {
+      color: #c084fc;
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      text-shadow: 0 0 14px rgba(160, 60, 255, 0.7);
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    input[type="password"] {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(138, 43, 226, 0.5);
+      border-radius: 8px;
+      color: #e2d4f7;
+      font-size: 1.1rem;
+      letter-spacing: 0.2em;
+      padding: 0.75rem 1.25rem;
+      outline: none;
+      width: 240px;
+      text-align: center;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      box-shadow: 0 0 10px rgba(138, 43, 226, 0.2);
+    }
+
+    input[type="password"]:focus {
+      border-color: rgba(180, 80, 255, 0.9);
+      box-shadow: 0 0 18px rgba(160, 60, 255, 0.5);
+    }
+
+    input[type="password"].error {
+      border-color: rgba(255, 60, 100, 0.8);
+      box-shadow: 0 0 14px rgba(255, 60, 100, 0.4);
+      animation: shake 0.35s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%       { transform: translateX(-8px); }
+      40%       { transform: translateX(8px); }
+      60%       { transform: translateX(-5px); }
+      80%       { transform: translateX(5px); }
+    }
+
+    button {
+      display: block;
+      margin: 1.25rem auto 0;
+      background: transparent;
+      border: 1px solid rgba(138, 43, 226, 0.6);
+      border-radius: 8px;
+      color: #c084fc;
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      padding: 0.6rem 2rem;
+      cursor: pointer;
+      transition: background 0.25s, box-shadow 0.25s, color 0.25s;
+    }
+
+    button:hover {
+      background: rgba(138, 43, 226, 0.15);
+      box-shadow: 0 0 16px rgba(160, 60, 255, 0.45);
+      color: #e0b4ff;
+    }
+
+    .error-msg {
+      color: rgba(255, 100, 130, 0.85);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      margin-top: 0.75rem;
+      text-align: center;
+      height: 1em;
+      text-shadow: 0 0 8px rgba(255, 60, 100, 0.5);
+    }
+
+    /* Main content (shown after correct password) */
+    #content {
+      display: none;
+      position: fixed;
+      inset: 0;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      background: radial-gradient(ellipse at center, #0d0010 0%, #000 70%);
+      color: #c084fc;
+      font-size: 1.5rem;
+      letter-spacing: 0.2em;
+      text-shadow: 0 0 20px rgba(160, 60, 255, 0.8);
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="snow"></canvas>
+
+  <div id="gate">
+    <div class="glow-ring"></div>
+    <div class="lock-icon">&#x1F512;</div>
+    <h1>Enter Password</h1>
+    <div class="input-wrap">
+      <input type="password" id="pwd" placeholder="••••••" autocomplete="off" />
+    </div>
+    <button onclick="checkPassword()">Enter</button>
+    <div class="error-msg" id="err"></div>
+  </div>
+
+  <div id="content">
+    Welcome.
+  </div>
+
+  <script>
+    // ── Password gate ──────────────────────────────────────────────
+    const CORRECT = 'salsa';
+
+    document.getElementById('pwd').addEventListener('keydown', e => {
+      if (e.key === 'Enter') checkPassword();
+    });
+
+    function checkPassword() {
+      const input = document.getElementById('pwd');
+      const err   = document.getElementById('err');
+
+      if (input.value === CORRECT) {
+        document.getElementById('gate').style.display = 'none';
+        const content = document.getElementById('content');
+        content.style.display = 'flex';
+      } else {
+        err.textContent = 'Incorrect password';
+        input.classList.remove('error');
+        void input.offsetWidth; // reflow to restart animation
+        input.classList.add('error');
+        input.value = '';
+        setTimeout(() => {
+          err.textContent = '';
+          input.classList.remove('error');
+        }, 1800);
+      }
+    }
+
+    // ── Snow ───────────────────────────────────────────────────────
+    const canvas = document.getElementById('snow');
+    const ctx    = canvas.getContext('2d');
+
+    let W = canvas.width  = window.innerWidth;
+    let H = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    });
+
+    const FLAKE_COUNT = 160;
+    const flakes = Array.from({ length: FLAKE_COUNT }, () => ({
+      x:     Math.random() * W,
+      y:     Math.random() * H,
+      r:     Math.random() * 2.5 + 0.5,
+      speed: Math.random() * 1.2 + 0.3,
+      drift: (Math.random() - 0.5) * 0.4,
+      alpha: Math.random() * 0.55 + 0.3,
+    }));
+
+    function drawSnow() {
+      ctx.clearRect(0, 0, W, H);
+
+      for (const f of flakes) {
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(220, 200, 255, ${f.alpha})`;
+        ctx.fill();
+
+        f.y += f.speed;
+        f.x += f.drift;
+
+        if (f.y > H + 4) {
+          f.y = -4;
+          f.x = Math.random() * W;
+        }
+        if (f.x > W + 4) f.x = -4;
+        if (f.x < -4)    f.x = W + 4;
+      }
+
+      requestAnimationFrame(drawSnow);
+    }
+
+    drawSnow();
+  </script>
+
+</body>
+</html>
