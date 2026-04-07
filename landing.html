@@ -268,20 +268,29 @@
         </a>
       </div>
 
-      <!-- Twitch channel preview — links to stream on click -->
-      <a href="https://www.twitch.tv/toptiernas" target="_blank" rel="noopener"
-         class="w-full aspect-video max-w-5xl mx-auto rounded-lg overflow-hidden bg-card-purple/30 border border-accent-purple/20 shadow-[0_0_50px_rgba(168,85,247,0.1)] relative group block">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-        <img alt="TopTierNas on Twitch" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBt4k9FlmjmYER_UoZw2rd_LCwL5tFdpOXuxrrwWrR2WYCodZmCjmgeXlW-4T6z08dYtfXnGoo6J3TjsCazf679t63N77gbcRz_shbbGsqhTY85Kh_YdXqSw4hQzUL2I-RbMfoG9apBPSIx5oqKYtzA0YGU7A5KrdITLI8aNCJihaTyxoSBY6fFOGBzJYmYrN4VvGljXQ2w5MMN7FXqSnieuMA6-NP2cWup3WuNprocul1G98jTulFYzevnXfaBUFH8xaYcu1rn4Aw">
-        <div class="absolute inset-0 flex items-center justify-center">
-          <div class="w-20 h-20 rounded-full bg-accent-purple/20 backdrop-blur-md border border-accent-purple/40 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <span class="material-symbols-outlined text-4xl text-white" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
-          </div>
-        </div>
-        <div class="absolute top-6 left-6 flex items-center gap-2 px-3 py-1 bg-accent-purple rounded-sm shadow-[0_0_15px_rgba(168,85,247,0.5)]">
+      <!-- Twitch live embed -->
+      <div class="w-full max-w-5xl mx-auto rounded-lg overflow-hidden bg-card-purple/30 border border-accent-purple/20 shadow-[0_0_50px_rgba(168,85,247,0.1)] relative">
+        <!-- LIVE badge -->
+        <div class="absolute top-6 left-6 flex items-center gap-2 px-3 py-1 bg-accent-purple rounded-sm shadow-[0_0_15px_rgba(168,85,247,0.5)] z-10 pointer-events-none">
           <span class="w-2 h-2 rounded-full bg-black animate-pulse"></span>
           <span class="font-label text-[10px] font-bold tracking-widest uppercase text-black">Live</span>
         </div>
+        <!-- 16:9 iframe wrapper -->
+        <div class="aspect-video w-full">
+          <iframe
+            src="https://player.twitch.tv/?channel=toptiernas&parent=nasmadeit.github.io&parent=localhost&autoplay=false&muted=false"
+            width="100%"
+            height="100%"
+            allowfullscreen
+            class="w-full h-full block">
+          </iframe>
+        </div>
+      </div>
+      <!-- Click-through CTA -->
+      <a href="https://www.twitch.tv/toptiernas" target="_blank" rel="noopener"
+         class="inline-flex items-center gap-2 px-8 py-3 bg-accent-purple text-black font-headline font-bold uppercase tracking-tight hover:bg-white transition-colors shadow-[0_0_20px_rgba(168,85,247,0.4)] rounded-lg">
+        <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">live_tv</span>
+        Watch on Twitch
       </a>
     </div>
   </section>
