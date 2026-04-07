@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Enter</title>
+  <title>TopTierNas</title>
   <style>
     * {
       margin: 0;
@@ -180,9 +180,7 @@
       const err   = document.getElementById('err');
 
       if (input.value === CORRECT) {
-        document.getElementById('gate').style.display = 'none';
-        const content = document.getElementById('content');
-        content.style.display = 'flex';
+        window.location.href = 'landing.html';
       } else {
         err.textContent = 'Incorrect password';
         input.classList.remove('error');

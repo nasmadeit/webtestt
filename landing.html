@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>TopTierNas</title>
+<!-- Purple "N" favicon -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%23A855F7'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='central' text-anchor='middle' font-family='Arial Black,Arial,sans-serif' font-weight='900' font-size='20' fill='%23000'%3EN%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "inverse-on-surface": "#303030",
+          "surface-container-high": "#2a2a2a",
+          "on-secondary-fixed-variant": "#3c3b3b",
+          "outline-variant": "#474747",
+          "on-secondary": "#1b1c1c",
+          "tertiary": "#e2e2e2",
+          "on-secondary-fixed": "#1b1c1c",
+          "primary-fixed-dim": "#454747",
+          "surface-variant": "#353535",
+          "on-tertiary-container": "#000000",
+          "tertiary-container": "#919191",
+          "on-primary-container": "#000000",
+          "secondary-container": "#474746",
+          "on-background": "#e2e2e2",
+          "background": "#000000",
+          "error": "#ffb4ab",
+          "inverse-surface": "#e2e2e2",
+          "on-surface-variant": "#c6c6c6",
+          "on-primary": "#000000",
+          "primary": "#A855F7",
+          "outline": "#919191",
+          "secondary-fixed": "#c8c6c5",
+          "primary-fixed": "#5d5f5f",
+          "on-surface": "#e2e2e2",
+          "surface-container": "#151515",
+          "on-secondary-container": "#e5e2e1",
+          "on-tertiary": "#1b1b1b",
+          "surface-dim": "#131313",
+          "surface-container-lowest": "#0e0e0e",
+          "on-error-container": "#ffdad6",
+          "surface-container-highest": "#353535",
+          "on-primary-fixed": "#ffffff",
+          "secondary-fixed-dim": "#adabaa",
+          "inverse-primary": "#5d5f5f",
+          "surface-tint": "#A855F7",
+          "on-tertiary-fixed-variant": "#e2e2e2",
+          "secondary": "#c8c6c5",
+          "error-container": "#93000a",
+          "on-error": "#690005",
+          "primary-container": "#d4d4d4",
+          "on-primary-fixed-variant": "#e2e2e2",
+          "on-tertiary-fixed": "#ffffff",
+          "surface-container-low": "#1b1b1b",
+          "tertiary-fixed": "#5e5e5e",
+          "surface": "#131313",
+          "surface-bright": "#393939",
+          "tertiary-fixed-dim": "#474747",
+          "accent-purple": "#A855F7",
+          "card-purple": "#1A0533"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.125rem",
+          "lg": "0.25rem",
+          "xl": "0.5rem",
+          "full": "0.75rem"
+        },
+        "fontFamily": {
+          "headline": ["Space Grotesk"],
+          "body": ["Inter"],
+          "label": ["Inter"]
+        }
+      },
+    },
+  }
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: #000000;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Animated snow canvas */
+  #snow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .hero-spotlight {
+    position: absolute;
+    top: -10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 160%;
+    height: 80vh;
+    background: radial-gradient(circle at center, #7C3AED 0%, rgba(124, 58, 237, 0.2) 25%, rgba(124, 58, 237, 0.05) 45%, transparent 70%);
+    z-index: 0;
+    pointer-events: none;
+    filter: blur(80px);
+    opacity: 0.6;
+  }
+
+  .clips-glow {
+    position: absolute;
+    top: 0%;
+    left: 10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle at center, rgba(168, 85, 247, 0.12) 0%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .glass-card {
+    background: linear-gradient(145deg, #1A0533 0%, #0D031A 100%);
+    box-shadow: inset 0 0 20px rgba(168, 85, 247, 0.05);
+  }
+
+  .text-glow-purple {
+    text-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
+  }
+
+  .hover-glow:hover {
+    box-shadow: 0 0 25px rgba(168, 85, 247, 0.15);
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+
+  /* TikTok embed centering */
+  .tiktok-embed-wrap {
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Mobile: stack side nav below header */
+  @media (max-width: 1023px) {
+    .side-social-bar {
+      display: none;
+    }
+  }
+</style>
+</head>
+<body class="bg-[#000000] text-white selection:bg-accent-purple selection:text-black">
+
+<!-- Animated snow canvas -->
+<canvas id="snow"></canvas>
+
+<!-- Top Nav -->
+<header class="fixed top-0 w-full z-50 bg-black/60 backdrop-blur-xl border-b border-accent-purple/20 shadow-[0_20px_40px_rgba(124,58,237,0.05)]">
+  <div class="absolute inset-0 bg-gradient-to-b from-accent-purple/5 to-transparent pointer-events-none"></div>
+  <nav class="flex justify-between items-center px-8 h-20 max-w-screen-2xl mx-auto relative z-10">
+    <!-- Wordmark scrolls to top -->
+    <a href="#top" class="text-2xl font-bold tracking-tighter text-accent-purple font-headline hover:opacity-80 transition-opacity">
+      TopTierNas
+    </a>
+    <div class="hidden md:flex items-center gap-10">
+      <a class="text-white border-b-2 border-accent-purple pb-1 font-label uppercase tracking-[0.05em] text-xs" href="#links">Links</a>
+      <a class="text-neutral-400 hover:text-accent-purple transition-all duration-300 font-label uppercase tracking-[0.05em] text-xs px-2 py-1" href="#clips">Clips</a>
+      <a class="text-neutral-400 hover:text-accent-purple transition-all duration-300 font-label uppercase tracking-[0.05em] text-xs px-2 py-1" href="#about">About</a>
+    </div>
+    <!-- TODO: replace with your actual booking/contact email -->
+    <a href="mailto:bookings@toptiernas.com" class="bg-accent-purple text-black font-headline font-bold px-6 py-2 rounded-lg scale-95 active:scale-90 transition-transform hover:bg-white inline-block">
+      Work With Me
+    </a>
+  </nav>
+</header>
+
+<!-- Side Nav -->
+<aside class="side-social-bar h-full w-20 fixed left-0 top-0 border-r border-accent-purple/10 bg-[#050505] hidden lg:flex flex-col items-center py-8 gap-8 z-40">
+  <div class="mb-12">
+    <div class="w-12 h-12 rounded-full overflow-hidden border border-accent-purple/30">
+      <img alt="TopTierNas" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlv6Gp7MA95giALjumKKFaUpik7UTNtngjILYCxglc3oAzHuHOijNs525jFrAL-hHCvcrrhtlN02WSedOlg2yQeExZSsWwxzA_T8kGXlYNHRX6NLwQhSiRIUAc4LgWPni2EdGDGXyxZeWvZ7n3RGRkIyFs76Nip8NWgYJlkAiA359vT17dVKkIZTwCqrG5D9WeoOKfZfAu42_ue6C6LAElwdKc5hWEMyVXJLVE_Bt02M8IbiAS39NCst3CXHCGLd--BeS8AVw8nKE">
+    </div>
+  </div>
+  <div class="flex flex-col items-center gap-8 flex-grow">
+    <!-- Twitch -->
+    <a class="bg-accent-purple text-black scale-110 p-3 rounded transition-all duration-300 group" href="https://www.twitch.tv/toptiernas" target="_blank" rel="noopener" title="Twitch">
+      <span class="material-symbols-outlined">live_tv</span>
+    </a>
+    <!-- YouTube -->
+    <a class="text-neutral-500 hover:text-accent-purple transition-all duration-300" href="https://www.youtube.com/@ToptierNas" target="_blank" rel="noopener" title="YouTube">
+      <span class="material-symbols-outlined">video_library</span>
+    </a>
+    <!-- Twitch Subscribe -->
+    <a class="text-neutral-500 hover:text-accent-purple transition-all duration-300" href="https://www.twitch.tv/products/toptiernas" target="_blank" rel="noopener" title="Subscribe on Twitch">
+      <span class="material-symbols-outlined">subscriptions</span>
+    </a>
+    <!-- Discord -->
+    <a class="text-neutral-500 hover:text-accent-purple transition-all duration-300" href="https://discord.gg/e7VwJw8JHm" target="_blank" rel="noopener" title="Discord — Top Shelf">
+      <span class="material-symbols-outlined">forum</span>
+    </a>
+    <!-- Instagram -->
+    <a class="text-neutral-500 hover:text-accent-purple transition-all duration-300" href="https://www.instagram.com/toptiernas" target="_blank" rel="noopener" title="Instagram">
+      <span class="material-symbols-outlined">photo_camera</span>
+    </a>
+    <!-- X / Twitter -->
+    <a class="text-neutral-500 hover:text-accent-purple transition-all duration-300" href="https://x.com/toptiernas?s=11" target="_blank" rel="noopener" title="X / Twitter">
+      <span class="material-symbols-outlined">close</span>
+    </a>
+  </div>
+</aside>
+
+<main id="top" class="relative z-10 pt-20 lg:pl-20">
+
+  <!-- Hero / Links Section -->
+  <section id="links" class="min-h-screen flex flex-col items-center justify-center px-6 py-20 relative overflow-hidden">
+    <div class="hero-spotlight"></div>
+    <div class="text-center max-w-5xl mx-auto space-y-8 relative z-10">
+      <h1 class="text-[clamp(4rem,15vw,10rem)] leading-[0.8] font-headline font-bold tracking-tighter text-white uppercase text-glow-purple">
+        TopTierNas
+      </h1>
+      <p class="font-label text-neutral-400 tracking-[0.2em] text-lg lg:text-2xl uppercase">
+        Live. Unfiltered. Top Tier.
+      </p>
+
+      <!-- Social link buttons -->
+      <div class="flex flex-wrap justify-center gap-4 py-8">
+        <a class="px-6 py-3 bg-card-purple/40 border border-accent-purple/20 hover:border-accent-purple transition-all font-label text-xs uppercase tracking-widest flex items-center gap-2"
+           href="https://www.twitch.tv/toptiernas" target="_blank" rel="noopener">
+          Twitch
+        </a>
+        <a class="px-6 py-3 bg-card-purple/40 border border-accent-purple/20 hover:border-accent-purple transition-all font-label text-xs uppercase tracking-widest flex items-center gap-2"
+           href="https://www.tiktok.com/@toptiernas?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener">
+          TikTok
+        </a>
+        <a class="px-6 py-3 bg-card-purple/40 border border-accent-purple/20 hover:border-accent-purple transition-all font-label text-xs uppercase tracking-widest flex items-center gap-2"
+           href="https://www.youtube.com/@ToptierNas" target="_blank" rel="noopener">
+          YouTube
+        </a>
+        <a class="px-6 py-3 bg-card-purple/40 border border-accent-purple/20 hover:border-accent-purple transition-all font-label text-xs uppercase tracking-widest flex items-center gap-2"
+           href="https://discord.gg/e7VwJw8JHm" target="_blank" rel="noopener">
+          Discord
+        </a>
+        <a class="px-6 py-3 bg-card-purple/40 border border-accent-purple/20 hover:border-accent-purple transition-all font-label text-xs uppercase tracking-widest flex items-center gap-2"
+           href="https://www.instagram.com/toptiernas" target="_blank" rel="noopener">
+          Instagram
+        </a>
+        <a class="px-6 py-3 bg-card-purple/40 border border-accent-purple/20 hover:border-accent-purple transition-all font-label text-xs uppercase tracking-widest flex items-center gap-2"
+           href="https://x.com/toptiernas?s=11" target="_blank" rel="noopener">
+          X / Twitter
+        </a>
+        <a class="px-6 py-3 bg-card-purple/40 border border-accent-purple/20 hover:border-accent-purple transition-all font-label text-xs uppercase tracking-widest flex items-center gap-2"
+           href="https://www.twitch.tv/products/toptiernas" target="_blank" rel="noopener">
+          Subscribe
+        </a>
+        <a class="px-6 py-3 bg-card-purple/40 border border-accent-purple/20 hover:border-accent-purple transition-all font-label text-xs uppercase tracking-widest flex items-center gap-2"
+           href="https://streamelements.com/toptiernas/tip" target="_blank" rel="noopener">
+          Donate
+        </a>
+      </div>
+
+      <!-- Twitch channel preview — links to stream on click -->
+      <a href="https://www.twitch.tv/toptiernas" target="_blank" rel="noopener"
+         class="w-full aspect-video max-w-5xl mx-auto rounded-lg overflow-hidden bg-card-purple/30 border border-accent-purple/20 shadow-[0_0_50px_rgba(168,85,247,0.1)] relative group block">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <img alt="TopTierNas on Twitch" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBt4k9FlmjmYER_UoZw2rd_LCwL5tFdpOXuxrrwWrR2WYCodZmCjmgeXlW-4T6z08dYtfXnGoo6J3TjsCazf679t63N77gbcRz_shbbGsqhTY85Kh_YdXqSw4hQzUL2I-RbMfoG9apBPSIx5oqKYtzA0YGU7A5KrdITLI8aNCJihaTyxoSBY6fFOGBzJYmYrN4VvGljXQ2w5MMN7FXqSnieuMA6-NP2cWup3WuNprocul1G98jTulFYzevnXfaBUFH8xaYcu1rn4Aw">
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="w-20 h-20 rounded-full bg-accent-purple/20 backdrop-blur-md border border-accent-purple/40 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-4xl text-white" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+          </div>
+        </div>
+        <div class="absolute top-6 left-6 flex items-center gap-2 px-3 py-1 bg-accent-purple rounded-sm shadow-[0_0_15px_rgba(168,85,247,0.5)]">
+          <span class="w-2 h-2 rounded-full bg-black animate-pulse"></span>
+          <span class="font-label text-[10px] font-bold tracking-widest uppercase text-black">Live</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Clips Section -->
+  <section id="clips" class="py-32 px-6 max-w-7xl mx-auto relative">
+    <div class="clips-glow"></div>
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4 relative z-10">
+      <div>
+        <h2 class="text-5xl lg:text-7xl font-headline font-bold tracking-tighter uppercase mb-4 text-glow-purple">Clips</h2>
+        <div class="h-1 w-20 bg-accent-purple shadow-[0_0_10px_rgba(168,85,247,0.5)]"></div>
+      </div>
+      <p class="font-body text-neutral-400 max-w-sm">The best moments captured live. High energy, pure chaos, and top tier content.</p>
+    </div>
+
+    <!--
+      TODO: Replace VIDEO_ID_1, VIDEO_ID_2, VIDEO_ID_3 with actual TikTok video IDs from @toptiernas.
+      Find video IDs in the URL: https://www.tiktok.com/@toptiernas/video/VIDEO_ID_HERE
+    -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10 justify-items-center">
+
+      <!-- Clip 1 -->
+      <div class="tiktok-embed-wrap w-full">
+        <blockquote
+          class="tiktok-embed"
+          cite="https://www.tiktok.com/@toptiernas/video/VIDEO_ID_1"
+          data-video-id="VIDEO_ID_1"
+          style="max-width:325px;min-width:325px;">
+          <section>
+            <a target="_blank" rel="noopener" href="https://www.tiktok.com/@toptiernas">@toptiernas</a>
+          </section>
+        </blockquote>
+      </div>
+
+      <!-- Clip 2 -->
+      <div class="tiktok-embed-wrap w-full">
+        <blockquote
+          class="tiktok-embed"
+          cite="https://www.tiktok.com/@toptiernas/video/VIDEO_ID_2"
+          data-video-id="VIDEO_ID_2"
+          style="max-width:325px;min-width:325px;">
+          <section>
+            <a target="_blank" rel="noopener" href="https://www.tiktok.com/@toptiernas">@toptiernas</a>
+          </section>
+        </blockquote>
+      </div>
+
+      <!-- Clip 3 -->
+      <div class="tiktok-embed-wrap w-full">
+        <blockquote
+          class="tiktok-embed"
+          cite="https://www.tiktok.com/@toptiernas/video/VIDEO_ID_3"
+          data-video-id="VIDEO_ID_3"
+          style="max-width:325px;min-width:325px;">
+          <section>
+            <a target="_blank" rel="noopener" href="https://www.tiktok.com/@toptiernas">@toptiernas</a>
+          </section>
+        </blockquote>
+      </div>
+
+    </div>
+
+    <!-- TikTok embed script — loads once, renders all blockquotes above -->
+    <script async src="https://www.tiktok.com/embed.js"></script>
+
+    <div class="mt-16 flex justify-center">
+      <a href="https://www.tiktok.com/@toptiernas?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener"
+         class="px-12 py-4 border border-accent-purple/30 hover:bg-accent-purple hover:text-black transition-all font-label text-xs uppercase tracking-[0.3em] hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] inline-block">
+        View All Clips
+      </a>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-32 px-6 max-w-7xl mx-auto bg-accent-purple/[0.02] border-y border-accent-purple/5">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+      <div>
+        <span class="font-label text-xs tracking-widest text-accent-purple uppercase block mb-4">Biography</span>
+        <h2 class="text-5xl font-headline font-bold tracking-tighter uppercase mb-8">Breaking the Meta</h2>
+        <p class="font-body text-xl text-neutral-300 leading-relaxed mb-6">
+          TopTierNas is a variety streamer and content creator who keeps it real, every single stream. Known for desktop streams and unscripted Just Chatting moments that actually hit, TopTierNas built a community around genuine conversation, real reactions, and zero filter.
+        </p>
+        <p class="font-body text-xl text-neutral-300 leading-relaxed mb-8">
+          No script. No character. Just Nas.
+        </p>
+        <p class="font-body text-neutral-400 mb-4">
+          A competitor at heart, TopTierNas proved that when The AK Games hosted by Akshath10 came around — a 100-streamer tournament where teams competed across a gauntlet of variety games, twists, votes, and 1v1s. He didn't just survive the chaos. He won.
+        </p>
+        <p class="font-body text-neutral-400 mb-10">
+          Come through, join the Top Shelf Discord, and see what top tier actually looks like.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a href="https://discord.gg/e7VwJw8JHm" target="_blank" rel="noopener"
+             class="bg-accent-purple text-black px-8 py-4 font-headline font-bold uppercase tracking-tight hover:bg-white transition-colors shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+            Join the Discord
+          </a>
+          <a href="https://www.twitch.tv/toptiernas" target="_blank" rel="noopener"
+             class="border border-accent-purple/30 px-8 py-4 font-headline font-bold uppercase tracking-tight hover:bg-accent-purple/10 transition-colors">
+            Watch Live
+          </a>
+        </div>
+      </div>
+
+      <!-- Stats grid -->
+      <div class="grid grid-cols-2 gap-6">
+        <div class="glass-card p-10 border border-accent-purple/15 rounded-lg flex flex-col items-center text-center group hover:border-accent-purple/40 transition-colors">
+          <span class="material-symbols-outlined text-3xl mb-4 text-accent-purple group-hover:scale-110 transition-transform">groups</span>
+          <div class="text-4xl font-headline font-bold mb-2">2.4M</div>
+          <div class="font-label text-[10px] tracking-widest text-neutral-500 uppercase">Followers</div>
+        </div>
+        <div class="glass-card p-10 border border-accent-purple/15 rounded-lg flex flex-col items-center text-center group hover:border-accent-purple/40 transition-colors">
+          <span class="material-symbols-outlined text-3xl mb-4 text-accent-purple group-hover:scale-110 transition-transform">schedule</span>
+          <div class="text-4xl font-headline font-bold mb-2">15K+</div>
+          <div class="font-label text-[10px] tracking-widest text-neutral-500 uppercase">Hours Streamed</div>
+        </div>
+        <div class="glass-card p-10 border border-accent-purple/15 rounded-lg flex flex-col items-center text-center group hover:border-accent-purple/40 transition-colors">
+          <span class="material-symbols-outlined text-3xl mb-4 text-accent-purple group-hover:scale-110 transition-transform">star</span>
+          <div class="text-4xl font-headline font-bold mb-2">Top 1%</div>
+          <div class="font-label text-[10px] tracking-widest text-neutral-500 uppercase">Twitch Global</div>
+        </div>
+        <div class="glass-card p-10 border border-accent-purple/15 rounded-lg flex flex-col items-center text-center group hover:border-accent-purple/40 transition-colors">
+          <span class="material-symbols-outlined text-3xl mb-4 text-accent-purple group-hover:scale-110 transition-transform">bolt</span>
+          <div class="text-4xl font-headline font-bold mb-2">0</div>
+          <div class="font-label text-[10px] tracking-widest text-neutral-500 uppercase">Filter Used</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="w-full py-24 border-t border-accent-purple/10 bg-black flex flex-col items-center justify-center gap-8 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-t from-accent-purple/5 to-transparent pointer-events-none"></div>
+
+    <!-- Mobile social links row (side nav is hidden on mobile) -->
+    <div class="flex flex-wrap justify-center gap-6 relative z-10 lg:hidden">
+      <a href="https://www.twitch.tv/toptiernas" target="_blank" rel="noopener" class="text-neutral-500 hover:text-accent-purple transition-colors font-label text-xs uppercase tracking-widest">Twitch</a>
+      <a href="https://www.tiktok.com/@toptiernas" target="_blank" rel="noopener" class="text-neutral-500 hover:text-accent-purple transition-colors font-label text-xs uppercase tracking-widest">TikTok</a>
+      <a href="https://www.youtube.com/@ToptierNas" target="_blank" rel="noopener" class="text-neutral-500 hover:text-accent-purple transition-colors font-label text-xs uppercase tracking-widest">YouTube</a>
+      <a href="https://discord.gg/e7VwJw8JHm" target="_blank" rel="noopener" class="text-neutral-500 hover:text-accent-purple transition-colors font-label text-xs uppercase tracking-widest">Discord</a>
+      <a href="https://www.instagram.com/toptiernas" target="_blank" rel="noopener" class="text-neutral-500 hover:text-accent-purple transition-colors font-label text-xs uppercase tracking-widest">Instagram</a>
+      <a href="https://x.com/toptiernas?s=11" target="_blank" rel="noopener" class="text-neutral-500 hover:text-accent-purple transition-colors font-label text-xs uppercase tracking-widest">X / Twitter</a>
+    </div>
+
+    <div class="flex gap-12 relative z-10">
+      <a class="text-neutral-600 hover:text-accent-purple transition-colors font-label text-xs uppercase tracking-widest" href="https://streamelements.com/toptiernas/tip" target="_blank" rel="noopener">Donate</a>
+      <a class="text-neutral-600 hover:text-accent-purple transition-colors font-label text-xs uppercase tracking-widest" href="https://www.twitch.tv/products/toptiernas" target="_blank" rel="noopener">Subscribe</a>
+      <!-- TODO: replace with actual email link -->
+      <a class="text-neutral-600 hover:text-accent-purple transition-colors font-label text-xs uppercase tracking-widest" href="mailto:bookings@toptiernas.com">Contact</a>
+    </div>
+
+    <div class="flex items-center gap-4 relative z-10">
+      <div class="w-8 h-[1px] bg-accent-purple/30 shadow-[0_0_5px_rgba(168,85,247,0.5)]"></div>
+      <div class="text-2xl font-bold tracking-tighter text-accent-purple opacity-60">TopTierNas</div>
+      <div class="w-8 h-[1px] bg-accent-purple/30 shadow-[0_0_5px_rgba(168,85,247,0.5)]"></div>
+    </div>
+
+    <p class="font-label text-xs uppercase tracking-widest text-neutral-500 relative z-10">
+      &copy; 2026 TopTierNas. All Rights Reserved.
+    </p>
+  </footer>
+
+</main>
+
+<!-- Scroll-to-top / Notify button -->
+<button onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  class="fixed bottom-8 right-8 w-16 h-16 bg-accent-purple text-black rounded-full shadow-[0_0_30px_rgba(168,85,247,0.5)] flex items-center justify-center z-50 hover:scale-110 active:scale-95 transition-all"
+  title="Back to top">
+  <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">arrow_upward</span>
+</button>
+
+<script>
+  // ── Animated Snow ────────────────────────────────────────────────
+  const canvas = document.getElementById('snow');
+  const ctx    = canvas.getContext('2d');
+
+  let W = canvas.width  = window.innerWidth;
+  let H = canvas.height = window.innerHeight;
+
+  window.addEventListener('resize', () => {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  });
+
+  const FLAKE_COUNT = 180;
+  const flakes = Array.from({ length: FLAKE_COUNT }, () => ({
+    x:     Math.random() * W,
+    y:     Math.random() * H,
+    r:     Math.random() * 2.5 + 0.5,
+    speed: Math.random() * 1.0 + 0.25,
+    drift: (Math.random() - 0.5) * 0.35,
+    alpha: Math.random() * 0.45 + 0.1,
+  }));
+
+  function drawSnow() {
+    ctx.clearRect(0, 0, W, H);
+    for (const f of flakes) {
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(216, 180, 254, ${f.alpha})`; // purple-tinted white
+      ctx.fill();
+      f.y += f.speed;
+      f.x += f.drift;
+      if (f.y > H + 4) { f.y = -4; f.x = Math.random() * W; }
+      if (f.x > W + 4) f.x = -4;
+      if (f.x < -4)    f.x = W + 4;
+    }
+    requestAnimationFrame(drawSnow);
+  }
+
+  drawSnow();
+
+  // ── Active nav highlight on scroll ──────────────────────────────
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('header nav a[href^="#"]');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navLinks.forEach(link => {
+          const active = link.getAttribute('href') === '#' + id;
+          link.classList.toggle('text-white', active);
+          link.classList.toggle('border-b-2', active);
+          link.classList.toggle('border-accent-purple', active);
+          link.classList.toggle('pb-1', active);
+          link.classList.toggle('text-neutral-400', !active);
+        });
+      }
+    });
+  }, { threshold: 0.4 });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
