@@ -5,11 +5,16 @@ on:
     - cron: '*/10 * * * *'   # every 10 minutes
   workflow_dispatch:           # allow manual trigger
 
+permissions:
+  contents: write              # needed to push stats.json back to repo
+
 jobs:
   fetch-stats:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch Twitch data and write stats.json
         env:
@@ -41,14 +46,17 @@ jobs:
             | python3 -c "import sys,json; print(json.load(sys.stdin)['total'])")
 
           # Write stats.json
-          cat > stats.json <<EOF
-          {
-            "is_live": ${IS_LIVE},
-            "viewer_count": ${VIEWERS},
-            "follower_count": ${FOLLOWERS},
-            "updated_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          python3 -c "
+          import json
+          data = {
+            'is_live': ${IS_LIVE},
+            'viewer_count': ${VIEWERS},
+            'follower_count': ${FOLLOWERS},
+            'updated_at': '$(date -u +%Y-%m-%dT%H:%M:%SZ)'
           }
-          EOF
+          with open('stats.json', 'w') as f:
+            json.dump(data, f, indent=2)
+          "
 
       - name: Commit stats.json if changed
         run: |
