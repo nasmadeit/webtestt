@@ -414,7 +414,7 @@
       <div class="grid grid-cols-2 gap-6">
         <div class="glass-card p-10 border border-accent-purple/15 rounded-lg flex flex-col items-center text-center group hover:border-accent-purple/40 transition-colors">
           <span class="material-symbols-outlined text-3xl mb-4 text-accent-purple group-hover:scale-110 transition-transform">groups</span>
-          <div class="text-4xl font-headline font-bold mb-2">2.4M</div>
+          <div id="stat-followers" class="text-4xl font-headline font-bold mb-2">2.4M</div>
           <div class="font-label text-[10px] tracking-widest text-neutral-500 uppercase">Followers</div>
         </div>
         <div class="glass-card p-10 border border-accent-purple/15 rounded-lg flex flex-col items-center text-center group hover:border-accent-purple/40 transition-colors">
@@ -518,18 +518,20 @@
 
   drawSnow();
 
-  // ── Live / Offline badge ─────────────────────────────────────────
-  const badge     = document.getElementById('stream-badge');
-  const badgeDot  = document.getElementById('badge-dot');
-  const badgeText = document.getElementById('badge-text');
+  // ── Live / Offline badge + real stats from stats.json ───────────
+  const badge       = document.getElementById('stream-badge');
+  const badgeDot    = document.getElementById('badge-dot');
+  const badgeText   = document.getElementById('badge-text');
+  const followerEl  = document.getElementById('stat-followers');
+  const viewerEl    = document.getElementById('stat-viewers');
 
-  async function checkLiveStatus() {
+  async function loadStats() {
     try {
-      const res  = await fetch('https://decapi.me/twitch/uptime/toptiernas');
-      const text = (await res.text()).trim();
-      const isLive = !text.toLowerCase().includes('offline') && !text.toLowerCase().includes('error');
+      const res  = await fetch('/stats.json?t=' + Date.now());
+      const data = await res.json();
 
-      if (isLive) {
+      // Badge
+      if (data.is_live) {
         badge.classList.remove('bg-neutral-700', 'shadow-none');
         badge.classList.add('bg-accent-purple', 'shadow-[0_0_15px_rgba(168,85,247,0.5)]');
         badgeDot.classList.add('animate-pulse');
@@ -538,6 +540,7 @@
         badgeText.textContent = 'Live';
         badgeText.classList.remove('text-neutral-300');
         badgeText.classList.add('text-black');
+        if (viewerEl) viewerEl.textContent = data.viewer_count.toLocaleString();
       } else {
         badge.classList.add('bg-neutral-700', 'shadow-none');
         badge.classList.remove('bg-accent-purple', 'shadow-[0_0_15px_rgba(168,85,247,0.5)]');
@@ -547,14 +550,25 @@
         badgeText.textContent = 'Offline';
         badgeText.classList.add('text-neutral-300');
         badgeText.classList.remove('text-black');
+        if (viewerEl) viewerEl.textContent = '—';
+      }
+
+      // Follower count
+      if (followerEl && data.follower_count) {
+        const f = data.follower_count;
+        followerEl.textContent = f >= 1000000
+          ? (f / 1000000).toFixed(1) + 'M'
+          : f >= 1000
+          ? (f / 1000).toFixed(1) + 'K'
+          : f.toString();
       }
     } catch (e) {
-      // silently fail — leave badge as-is
+      // stats.json not yet generated — leave defaults
     }
   }
 
-  checkLiveStatus();
-  setInterval(checkLiveStatus, 60000); // recheck every 60s
+  loadStats();
+  setInterval(loadStats, 120000); // refresh every 2 min
 
   // ── Active nav highlight on scroll ──────────────────────────────
   const sections = document.querySelectorAll('section[id]');
