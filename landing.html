@@ -285,10 +285,10 @@
 
       <!-- Twitch live embed -->
       <div class="w-full max-w-5xl mx-auto rounded-lg overflow-hidden bg-card-purple/30 border border-accent-purple/20 shadow-[0_0_50px_rgba(168,85,247,0.1)] relative">
-        <!-- LIVE badge -->
-        <div class="absolute top-[20px] right-6 flex items-center gap-2 px-3 py-1 bg-accent-purple rounded-lg shadow-[0_0_15px_rgba(168,85,247,0.5)] z-10 pointer-events-none">
-          <span class="w-2 h-2 rounded-full bg-black animate-pulse"></span>
-          <span class="font-label text-[10px] font-bold tracking-widest uppercase text-black">Live</span>
+        <!-- LIVE / OFFLINE badge -->
+        <div id="stream-badge" class="absolute top-[20px] right-6 flex items-center gap-2 px-3 py-1 rounded-lg z-10 pointer-events-none bg-accent-purple shadow-[0_0_15px_rgba(168,85,247,0.5)]">
+          <span id="badge-dot" class="w-2 h-2 rounded-full bg-black animate-pulse"></span>
+          <span id="badge-text" class="font-label text-[10px] font-bold tracking-widest uppercase text-black">Live</span>
         </div>
         <!-- 16:9 iframe wrapper -->
         <div class="aspect-video w-full">
@@ -517,6 +517,44 @@
   }
 
   drawSnow();
+
+  // ── Live / Offline badge ─────────────────────────────────────────
+  const badge     = document.getElementById('stream-badge');
+  const badgeDot  = document.getElementById('badge-dot');
+  const badgeText = document.getElementById('badge-text');
+
+  async function checkLiveStatus() {
+    try {
+      const res  = await fetch('https://decapi.me/twitch/uptime/toptiernas');
+      const text = (await res.text()).trim();
+      const isLive = !text.toLowerCase().includes('offline') && !text.toLowerCase().includes('error');
+
+      if (isLive) {
+        badge.classList.remove('bg-neutral-700', 'shadow-none');
+        badge.classList.add('bg-accent-purple', 'shadow-[0_0_15px_rgba(168,85,247,0.5)]');
+        badgeDot.classList.add('animate-pulse');
+        badgeDot.classList.remove('bg-neutral-500');
+        badgeDot.classList.add('bg-black');
+        badgeText.textContent = 'Live';
+        badgeText.classList.remove('text-neutral-300');
+        badgeText.classList.add('text-black');
+      } else {
+        badge.classList.add('bg-neutral-700', 'shadow-none');
+        badge.classList.remove('bg-accent-purple', 'shadow-[0_0_15px_rgba(168,85,247,0.5)]');
+        badgeDot.classList.remove('animate-pulse');
+        badgeDot.classList.add('bg-neutral-500');
+        badgeDot.classList.remove('bg-black');
+        badgeText.textContent = 'Offline';
+        badgeText.classList.add('text-neutral-300');
+        badgeText.classList.remove('text-black');
+      }
+    } catch (e) {
+      // silently fail — leave badge as-is
+    }
+  }
+
+  checkLiveStatus();
+  setInterval(checkLiveStatus, 60000); // recheck every 60s
 
   // ── Active nav highlight on scroll ──────────────────────────────
   const sections = document.querySelectorAll('section[id]');
