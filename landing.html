@@ -418,9 +418,9 @@
           <div class="font-label text-[10px] tracking-widest text-neutral-500 uppercase">Followers</div>
         </div>
         <div class="glass-card p-10 border border-accent-purple/15 rounded-lg flex flex-col items-center text-center group hover:border-accent-purple/40 transition-colors">
-          <span class="material-symbols-outlined text-3xl mb-4 text-accent-purple group-hover:scale-110 transition-transform">schedule</span>
-          <div class="text-4xl font-headline font-bold mb-2">15K+</div>
-          <div class="font-label text-[10px] tracking-widest text-neutral-500 uppercase">Hours Streamed</div>
+          <span class="material-symbols-outlined text-3xl mb-4 text-accent-purple group-hover:scale-110 transition-transform">bar_chart</span>
+          <div id="stat-total-views" class="text-4xl font-headline font-bold mb-2">—</div>
+          <div class="font-label text-[10px] tracking-widest text-neutral-500 uppercase">Total Views</div>
         </div>
         <div class="glass-card p-10 border border-accent-purple/15 rounded-lg flex flex-col items-center text-center group hover:border-accent-purple/40 transition-colors">
           <span class="material-symbols-outlined text-3xl mb-4 text-accent-purple group-hover:scale-110 transition-transform">star</span>
@@ -524,6 +524,7 @@
   const badgeText   = document.getElementById('badge-text');
   const followerEl  = document.getElementById('stat-followers');
   const viewerEl    = document.getElementById('stat-viewers');
+  const totalViewEl = document.getElementById('stat-total-views');
 
   async function loadStats() {
     try {
@@ -561,6 +562,16 @@
           : f >= 1000
           ? (f / 1000).toFixed(1) + 'K'
           : f.toString();
+      }
+
+      // Total views
+      if (totalViewEl && data.total_views != null) {
+        const v = data.total_views;
+        totalViewEl.textContent = v >= 1000000
+          ? (v / 1000000).toFixed(1) + 'M'
+          : v >= 1000
+          ? (v / 1000).toFixed(1) + 'K'
+          : v.toString();
       }
     } catch (e) {
       // stats.json not yet generated — leave defaults

@@ -31,6 +31,7 @@ jobs:
             -H "Client-ID: ${TWITCH_CLIENT_ID}" \
             -H "Authorization: Bearer ${TOKEN}")
           USER_ID=$(echo $USER | python3 -c "import sys,json; print(json.load(sys.stdin)['data'][0]['id'])")
+          TOTAL_VIEWS=$(echo $USER | python3 -c "import sys,json; print(json.load(sys.stdin)['data'][0]['view_count'])")
 
           # Get stream info (live status + viewer count)
           STREAM=$(curl -s "https://api.twitch.tv/helix/streams?user_login=toptiernas" \
@@ -50,8 +51,9 @@ jobs:
             --argjson is_live "$IS_LIVE" \
             --argjson viewer_count "$VIEWERS" \
             --argjson follower_count "$FOLLOWERS" \
+            --argjson total_views "$TOTAL_VIEWS" \
             --arg updated_at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-            '{is_live: $is_live, viewer_count: $viewer_count, follower_count: $follower_count, updated_at: $updated_at}' \
+            '{is_live: $is_live, viewer_count: $viewer_count, follower_count: $follower_count, total_views: $total_views, updated_at: $updated_at}' \
             > stats.json
 
       - name: Commit stats.json if changed
