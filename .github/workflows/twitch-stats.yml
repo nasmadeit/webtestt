@@ -46,17 +46,17 @@ jobs:
             | python3 -c "import sys,json; print(json.load(sys.stdin)['total'])")
 
           # Write stats.json
-          python3 -c "
+          python3 << PYEOF
           import json
           data = {
-            'is_live': ${IS_LIVE},
-            'viewer_count': ${VIEWERS},
-            'follower_count': ${FOLLOWERS},
-            'updated_at': '$(date -u +%Y-%m-%dT%H:%M:%SZ)'
+            "is_live": ${IS_LIVE},
+            "viewer_count": ${VIEWERS},
+            "follower_count": ${FOLLOWERS},
+            "updated_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           }
-          with open('stats.json', 'w') as f:
-            json.dump(data, f, indent=2)
-          "
+          with open("stats.json", "w") as f:
+              json.dump(data, f, indent=2)
+          PYEOF
 
       - name: Commit stats.json if changed
         run: |
